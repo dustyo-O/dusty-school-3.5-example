@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://designmodo.github.io/Flat-UI/dist/css/flat-ui.css" rel="stylesheet">
+  <link href="https://designmodo.github.io/Flat-UI/docs/assets/css/demo.css" rel="stylesheet">
+</head>
+<body>
+  <h1>Создание вёрстки</h1>
+  <div class="app"></div>
+  <script>
+    const data = localStorage.getItem('data');
+    const counters = JSON.parse(data).counters;
+
+    function makeBlock({ tag, textContent, classes, attributes }) {
+      const element = document.createElement(tag);
+      element.textContent = textContent;
+
+      if (classes) {
+        element.classList.add(...classes);
+      }
+
+      if (attributes) {
+        for (const [key, value] of Object.entries(attributes)) {
+          element.setAttribute(key, value);
+        }
+      }
+
+      return element;
+    }
+
+    const app = document.querySelector('.app');
+
+    for (const counter of counters) {
+      // const counterWidget = makeBlock({
+      //   tag: 'a',
+      //   textContent: counter.current,
+      //   classes: ['btn', 'btn-block', 'btn-lg', 'btn-warning'],
+      //   attributes: { href: '#fakelink' }
+      // });
+
+      const counterWidget = document.createElement('a');
+
+      counterWidget.textContent = counter.current;
+      counterWidget.setAttribute('href', '#fakelink');
+      counterWidget.classList.add('btn', 'btn-block', 'btn-lg', 'btn-warning');
+
+      counterWidget.addEventListener('click', ({ target }) => {
+        const currentIndex = counter.entities.findIndex(item => item === counter.current);
+
+        const nextIndex = currentIndex === counter.entities.length - 1 ? 0 : currentIndex + 1;
+        counter.current = counter.entities[nextIndex];
+
+        console.log(counter.current);
+        target.textContent = counter.current;
+
+        localStorage.setItem('data', JSON.stringify({ counters }));
+      });
+
+      app.appendChild(counterWidget);
+    }
+
+    const hello = document.createElement('div');
+
+    hello.textContent = 'Hello world';
+    hello.addEventListener('click', () => {
+      console.log('Hello!');
+    });
+
+
+// <a href="#fakelink" class="btn btn-block btn-lg btn-primary">Primary Button</a>
+
+    const button = document.createElement('a');
+
+    button.textContent = 'Primary Button';
+    button.setAttribute('href', '#fakelink');
+    button.classList.add('btn', 'btn-block', 'btn-lg', 'btn-primary');
+
+    button.addEventListener('click', () => {
+      console.log('Primary button!');
+    });
+
+    const templateButton = makeBlock({
+      tag: 'a',
+      textContent: 'Primary Button',
+      classes: ['btn', 'btn-block', 'btn-lg', 'btn-primary'],
+      attributes: { href: '#fakelink' }
+    });
+
+    templateButton.addEventListener('click', () => {
+      console.log('Primary button!');
+    });
+
+    app.appendChild(button);
+    app.appendChild(templateButton);
+
+  </script>
+</body>
+</html>
